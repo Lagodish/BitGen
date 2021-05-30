@@ -13,6 +13,9 @@ start.bat
 
 # Telegram support
 API line 125
+
 token & chatid 
+
 https://api.telegram.org/bot*TOKEN*/getUpdates ->  chatid
+
 @BotFather -> token
