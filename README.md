@@ -19,7 +19,7 @@ python3 start.py
 or
 
 ```sh
-start.ban
+start.bat
 ```
 # Windows setup
 pip install -r requirments.txt
