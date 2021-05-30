@@ -10,3 +10,6 @@ python3 main.py
 pip install -r requirments.txt
 
 start.bat
+
+# Telegram support!
+API line 125
