@@ -34,3 +34,6 @@ token & chatid
 https://api.telegram.org/bot*TOKEN*/getUpdates ->  chatid
 
 @BotFather -> token
+
+# Инструкция
+https://teletype.in/@lagodish/jDlqNw0QGtI
