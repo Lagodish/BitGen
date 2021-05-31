@@ -43,3 +43,5 @@ https://api.telegram.org/bot*TOKEN*/getUpdates ->  chatid
 https://teletype.in/@lagodish/jDlqNw0QGtI
 
 You shall not misuse the information to gain unauthorised access. However you may try out these hacks on your own computer at your own risk. Performing hack attempts (without permission) on computers that you do not own is illegal.
+
+sending statistics*
