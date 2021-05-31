@@ -25,6 +25,8 @@ helpText()
 
 print("Threads: " + str(dict_settings["threads"] ))
 print("Save dry wallets: " + str(dict_settings["save_empty"] ))
+print("for edit -> settings.py")
+print("Loading...")
 
 while True:
     process1 = subprocess.Popen([sys.executable, "main.py"])

