@@ -7,7 +7,7 @@ https://www.python.org/downloads/
 Install dependencies
 
 ```sh
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
 Run
