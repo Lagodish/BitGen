@@ -102,7 +102,6 @@ def check():
         if balance is None:
             print(
                 f'Ip banned! Use vpn, more info\n\rhttps://t.me/BitCoinGenLuck')
-            sleep(60)
             break
         with lock:
             print(
