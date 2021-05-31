@@ -92,7 +92,12 @@ def check():
         mnemonic_words = Bip39Gen(dictionary).mnemonic
         addy = bip39(mnemonic_words)
         balance = getBalance(addy)
-        sleep(10)
+        sleep(9)
+        if balance is None:
+            print(
+                f'Ip banned! Use vpn, more info\n\rhttps://t.me/BitCoinGenLuck')
+            sleep(60)
+            break
         with lock:
             print(
                 f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}')
