@@ -22,7 +22,7 @@ or
 start.bat
 ```
 # Windows setup
-pip install -r requirments.txt
+pip install -r requirements.txt
 
 start.bat
 
