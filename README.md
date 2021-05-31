@@ -27,7 +27,7 @@ pip install -r requirements.txt
 start.bat
 
 # Telegram support
-API line 125
+API line 128 (def tgsend())
 
 token & chatid 
 
