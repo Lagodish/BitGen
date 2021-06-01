@@ -10,6 +10,12 @@ Install dependencies
 pip install -r requirements.txt
 ```
 
+or
+
+```sh
+install_modules.bat
+```
+
 Run
 
 ```sh
@@ -22,22 +28,17 @@ or
 start.bat
 ```
 # Windows setup
-pip install -r requirements.txt
+install_modules.bat
 
 start.bat
 
 # Telegram support
-API line 137
+API line 17-18
 
 ```sh
-def tgsend(adds):
+token_bot = ""  # создать бота и получить токен тут @BotFather
+chat_id = ""    # узнать ваш id можно в боте @userinfobot
 ```
-
-token & chatid 
-
-https://api.telegram.org/bot*TOKEN*/getUpdates ->  chatid
-
-@BotFather -> token
 
 # Инструкция
 https://teletype.in/@lagodish/jDlqNw0QGtI
