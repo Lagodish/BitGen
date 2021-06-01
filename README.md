@@ -9,7 +9,7 @@ install_modules.bat
 start.bat
 
 # Telegram support
-API line 17-18
+main.py line 17-18
 
 ```sh
 token_bot = ""  # создать бота и получить токен тут @BotFather
